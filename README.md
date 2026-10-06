@@ -1,0 +1,24 @@
+This repository contains the 3D model STL files and sliced MDF files to 3D-print almost all hardware necessary for a homemeade weather station. Additional hardware required includes:
+
+* Ceramic bearings (8x22) for the wind vane and weather station
+* Magnets for the wind vane, weather station, and rain gauge
+* 8 reed switches and one 8-channel analog-to-digital converter for the wind vane
+* Hall effect sensors for the anemometer and rain gauge
+* BME-280 temperature/humidity/pressure sensor
+
+![image](overview.jpg) 
+    
+Temperature (<span>&#176;</span>F), relative humidity (%), and pressure (mb) are measured with a [BME 280](https://www.amazon.com/gp/product/B07P4CWGGK/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)">BME 280</a> environmental sensor via I2C protocol. The sensor is located on the underside of an arm of the station where it is sheltered from sun and rain to provide the most accurate readings.
+    
+Wind speed is measured with a custom-built three-cupped anemometer. As winds spin the anemometer, magnets connected to the shaft pass a [Hall Effect sensor](https://www.amazon.com/gp/product/B07SGBW87J/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1), which increases the voltage on a line connected to a Raspberry Pi GPIO pin each time the magnet passes. The Pi counts the number of voltage changes on the line over a 30-second duration to calculate rotations per minute and from this value determines the wind speed.
+    
+Wind direction is measured with a custom built wind vane. A magnet attached to the shaft of the wind vane sits over one of eight [reed switches](https://www.amazon.com/gp/product/B07MLZHWLY/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1), which close a circuit when in the presence of a magnetic field and are otherwise open. The reed switches are connected to an [eight-channel analog to digital converter](https://www.amazon.com/gp/product/B01HGCSGXM/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1), which measures the voltage of each connection. The Pi receives these eight voltages and uses them to identify the position of the magnet and corresponding wind direction. 
+    
+Rainfall is measured with a custom built tipping bucket style rain gauge. This gauge funnels rain into a small two-chambered bucket balanced on a fulcrum. Each time a bucket fills (the gauge was designed for this to correspond to 1 mm of rainfall), the bucket tips and empties its water and the other bucket begins to fill. An attached magnet and an additional Hall Effect sensor enable the weather station to record each 1 mm of total rainfall and calculate rainfall rates.
+    
+Lightning is observed with a [Sparkfun AS3935 Lightning Detector](https://www.amazon.com/gp/product/B07WFKWGC8/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1). This sensor includes a small antenna which measures electromagnetic pulses (EMPs) produced by lightning strikes in the 500 kHz band and estimates distance from the lightning strike. The sensor sits in a basket beneath one of the arms (ideally the wind vane arm to combine the SPI-connected sensors in one direction) which provides sufficient standoff distance from the Raspberry Pi and other sensors to prevent the detector from picking up false positives.
+    
+Three portholes in the base also provide mount points for the [5MP/1080p Raspberry Pi photo/video camera](https://www.amazon.com/gp/product/B07JPLV5K1/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1). The camera can be commanded remotely to capture videos, take individual photographs, or take time lapse videos with a customizable interval and duration (code included in this repository). Three holes are included in the base, with covers for those not in use, enabling the camera to document sunrises, sunsets, or storms and other weather phenomena in any direction. 
+
+Code for the weather station is available [here](www.github.com/cdens/wxcode), and the code for the weather server used to store and display the data is available [here](www.github.com/cdens/wxserver).
+   
